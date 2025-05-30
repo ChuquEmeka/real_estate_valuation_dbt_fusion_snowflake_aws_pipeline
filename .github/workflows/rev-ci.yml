@@ -22,6 +22,9 @@ jobs:
           curl -fsSL https://public.cdn.getdbt.com/fs/install/install.sh | sh -s -- --update
           dbtf --version
 
+      - name: Reload shell environment
+        run: source ~/.bashrc
+
       - name: Create profiles.yml
         run: |
           mkdir -p ~/.dbt
