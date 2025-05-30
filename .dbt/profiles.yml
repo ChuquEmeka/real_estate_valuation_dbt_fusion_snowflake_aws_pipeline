@@ -1,0 +1,13 @@
+real_estate_valuation_fusion:
+  target: dev
+  outputs:
+    dev:
+      type: snowflake
+      database: REAL_ESTATE_VAL_DEV
+      warehouse: COMPUTE_WH
+      threads: 16
+      role: ACCOUNTADMIN
+      account: MCUCTGT-LG63550
+      schema: STAGING
+      user: JUSTICE
+      password: Ifeomaobah1986!

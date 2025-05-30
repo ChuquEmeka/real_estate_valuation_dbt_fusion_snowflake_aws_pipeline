@@ -1,0 +1,9 @@
+version: 2
+
+sources:
+  - name: staging
+    database: "{{ target.database }}"
+    schema: STAGING
+    tables:
+      - name: raw_properties
+        description: "Raw ingested property data from the scraping pipeline"

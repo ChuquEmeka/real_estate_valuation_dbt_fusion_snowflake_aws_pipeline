@@ -1,0 +1,82 @@
+version: 2
+
+models:
+  - name: dim_properties
+    description: "Dimension table containing unique properties with details."
+    columns:
+      - name: property_id
+        description: "Primary key of the property."
+        tests:
+          - unique
+          - not_null
+          - relationships:
+              to: ref('fct_transactions')
+              field: property_id
+
+      - name: latitude
+        description: "Latitude coordinate of the property."
+        tests:
+          - not_null
+          - numeric_range:
+              column_name: latitude
+              min_value: -90
+              max_value: 90
+
+      - name: longitude
+        description: "Longitude coordinate of the property."
+        tests:
+          - not_null
+          - numeric_range:
+              column_name: longitude
+              min_value: -180
+              max_value: 180
+
+      - name: construction_year
+        description: "Year the property was constructed."
+        tests:
+          - not_null
+
+      - name: property_type
+        description: "Type of the property (e.g., apartment, house)."
+        tests:
+          - not_null
+
+  - name: fct_transactions
+    description: "Fact table with property transaction details."
+    columns:
+      - name: transaction_id
+        description: "Unique transaction identifier."
+        tests:
+          - unique
+          - not_null
+
+      - name: property_id
+        description: "Foreign key referencing the related property."
+        tests:
+          - not_null
+          - relationships:
+              to: ref('dim_properties')
+              field: property_id
+
+      - name: transaction_date
+        description: "Date of the property transaction."
+        tests:
+          - not_null
+
+      - name: sale_price
+        description: "Total sale price of the property."
+        tests:
+          - not_null
+          - numeric_range:
+              column_name: sale_price
+              min_value: 0
+              max_value: 1000000000  # Adjustable
+
+      - name: price_per_sqm
+        description: "Price per square meter of the property."
+        tests:
+          - not_null
+          - numeric_range:
+              column_name: price_per_sqm
+              min_value: 0
+              max_value: 100000  # Adjustable

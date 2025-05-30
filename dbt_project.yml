@@ -1,0 +1,17 @@
+name: 'real_estate_valuation_fusion'
+version: '1.0.0'
+
+profile: 'real_estate_valuation_fusion'
+
+target-path: "target"
+clean-targets:
+  - "target"
+  - "dbt_modules"
+
+model-paths: ["models"]
+analysis-paths: ["analysis"]
+test-paths: ["tests"]
+seed-paths: ["seeds"]
+snapshot-paths: ["snapshots"]
+macro-paths: ["macros"]
+docs-paths: ["docs"]

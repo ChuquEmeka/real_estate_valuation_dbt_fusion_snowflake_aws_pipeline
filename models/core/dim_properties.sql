@@ -1,0 +1,35 @@
+{{ config(
+    materialized='incremental',
+    unique_key='property_id'
+) }}
+
+SELECT DISTINCT
+  property_id,
+  street,
+  postal_code,
+  borough,
+  latitude,
+  cap_rate,
+  longitude,
+  property_type,
+  size_sqm,
+  lot_size_sqm,
+  bedrooms,
+  bathrooms,
+  total_rooms,
+  construction_year,
+  renovation_year,
+  condition,
+  has_balcony,
+  has_elevator,
+  heating_type,
+  has_parking,
+  energy_rating,
+  energy_consumption_kwh_m2,
+  dist_transport,
+  dist_schools,
+  dist_parks,
+  median_income,
+  pop_density,
+  crime_rate
+FROM {{ ref('stg_properties') }}
