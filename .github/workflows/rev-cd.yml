@@ -1,0 +1,121 @@
+name: CD for real_estate_valuation_fusion
+
+on:
+  pull_request:
+    branches:
+      - main
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy-dev:
+    runs-on: ubuntu-latest
+    if: github.event_name == 'pull_request'
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.9'
+
+      - name: Install dbt Fusion
+        run: |
+          curl -fsSL https://public.cdn.getdbt.com/fs/install/install.sh | sh -s -- --update
+
+      - name: Install Python dependencies
+        run: pip install dbt-snowflake
+
+      - name: Create profiles.yml
+        run: |
+          mkdir -p ~/.dbt
+          cat <<EOF > ~/.dbt/profiles.yml
+          real_estate_valuation_fusion:
+            outputs:
+              dev:
+                type: snowflake
+                account: ${{ secrets.SNOWFLAKE_ACCOUNT }}
+                user: ${{ secrets.SNOWFLAKE_USER }}
+                password: ${{ secrets.SNOWFLAKE_PASSWORD }}
+                role: ${{ secrets.SNOWFLAKE_ROLE }}
+                database: REAL_ESTATE_VAL_DEV
+                warehouse: ${{ secrets.SNOWFLAKE_WAREHOUSE }}
+                schema: STAGING
+                threads: 4
+              prod:
+                type: snowflake
+                account: ${{ secrets.SNOWFLAKE_ACCOUNT }}
+                user: ${{ secrets.SNOWFLAKE_USER }}
+                password: ${{ secrets.SNOWFLAKE_PASSWORD }}
+                role: ${{ secrets.SNOWFLAKE_ROLE }}
+                database: REAL_ESTATE_VAL_PROD
+                warehouse: ${{ secrets.SNOWFLAKE_WAREHOUSE }}
+                schema: STAGING
+                threads: 4
+            target: dev
+          EOF
+
+      - name: Run dbt models in dev
+        run: dbtf run --target dev
+
+      - name: Run snapshot in dev
+        run: dbtf snapshot --target dev
+
+  deploy-prod:
+    runs-on: ubuntu-latest
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.9'
+
+      - name: Install dbt Fusion
+        run: |
+          curl -fsSL https://public.cdn.getdbt.com/fs/install/install.sh | sh -s -- --update
+
+      - name: Install Python dependencies
+        run: pip install dbt-snowflake
+
+      - name: Create profiles.yml
+        run: |
+          mkdir -p ~/.dbt
+          cat <<EOF > ~/.dbt/profiles.yml
+          real_estate_valuation_fusion:
+            outputs:
+              dev:
+                type: snowflake
+                account: ${{ secrets.SNOWFLAKE_ACCOUNT }}
+                user: ${{ secrets.SNOWFLAKE_USER }}
+                password: ${{ secrets.SNOWFLAKE_PASSWORD }}
+                role: ${{ secrets.SNOWFLAKE_ROLE }}
+                database: REAL_ESTATE_VAL_DEV
+                warehouse: ${{ secrets.SNOWFLAKE_WAREHOUSE }}
+                schema: STAGING
+                threads: 4
+              prod:
+                type: snowflake
+                account: ${{ secrets.SNOWFLAKE_ACCOUNT }}
+                user: ${{ secrets.SNOWFLAKE_USER }}
+                password: ${{ secrets.SNOWFLAKE_PASSWORD }}
+                role: ${{ secrets.SNOWFLAKE_ROLE }}
+                database: REAL_ESTATE_VAL_PROD
+                warehouse: ${{ secrets.SNOWFLAKE_WAREHOUSE }}
+                schema: STAGING
+                threads: 4
+            target: prod
+          EOF
+
+      - name: Run dbt models in prod
+        run: dbtf run --target prod
+
+      - name: Run snapshot in prod
+        run: dbtf snapshot --target prod
+
+      - name: Run data tests in prod
+        run: dbtf test --select tag:data_tests --target prod
