@@ -24,9 +24,8 @@ jobs:
       - name: Install dbt Fusion
         run: |
           curl -fsSL https://public.cdn.getdbt.com/fs/install/install.sh | sh -s -- --update
-
-      - name: Reload shell environment
-        run: source ~/.bashrc
+          echo "$HOME/.local/bin" >> $GITHUB_PATH
+          dbtf --version
 
       - name: Create profiles.yml
         run: |
@@ -78,9 +77,8 @@ jobs:
       - name: Install dbt Fusion
         run: |
           curl -fsSL https://public.cdn.getdbt.com/fs/install/install.sh | sh -s -- --update
-
-      - name: Reload shell environment
-        run: source ~/.bashrc
+          echo "$HOME/.local/bin" >> $GITHUB_PATH
+          dbtf --version
 
       - name: Create profiles.yml
         run: |
