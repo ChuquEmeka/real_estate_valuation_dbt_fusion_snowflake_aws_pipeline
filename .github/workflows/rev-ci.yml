@@ -22,11 +22,6 @@ jobs:
           curl -fsSL https://public.cdn.getdbt.com/fs/install/install.sh | sh -s -- --update
           dbtf --version
 
-      - name: Install Python dependencies
-        run: |
-          python -m pip install --upgrade pip
-          pip install dbt-snowflake
-
       - name: Create profiles.yml
         run: |
           mkdir -p ~/.dbt
