@@ -55,12 +55,11 @@ jobs:
 
       - name: Run dbt debug
         run: ~/.local/bin/dbtf debug --profiles-dir ~/.dbt --profile real_estate_valuation_fusion --target dev
-
       - name: Run dbt compile
-        run: ~/.local/bin/dbtf compile --target dev
+        run: ~/.local/bin/dbtf compile --target dev --log-level INFO
 
       - name: Run data tests
-        run: ~/.local/bin/dbtf test --select tag:data_tests --target dev
+        run: ~/.local/bin/dbtf test --select tag:data_tests --target dev --log-level INFO
 
       - name: Run unit tests
-        run: ~/.local/bin/dbtf test --select tag:unit_tests --target dev
+        run: ~/.local/bin/dbtf test --select tag:unit_tests --target dev --log-level INFO
