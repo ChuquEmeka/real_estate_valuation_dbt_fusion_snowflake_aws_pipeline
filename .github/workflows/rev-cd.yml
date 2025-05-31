@@ -1,64 +1,14 @@
 name: CD for real_estate_valuation_fusion
 
 on:
-  pull_request:
-    branches:
-      - main
   push:
     branches:
       - main
 
 jobs:
-  deploy-dev:
-    runs-on: ubuntu-latest
-    if: github.event_name == 'pull_request'
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-
-      - name: Install dbt-fusion CLI (dbtf)
-        run: |
-          curl -fsSL https://public.cdn.getdbt.com/fs/install/install.sh | sh -s -- --update
-          mkdir -p ~/.local/bin
-          ln -s ~/.local/bin/dbt ~/.local/bin/dbtf
-          echo "$HOME/.local/bin" >> $GITHUB_PATH
-
-      - name: Confirm dbtf installed
-        run: ~/.local/bin/dbtf --version
-
-      - name: Set up Python
-        uses: actions/setup-python@v5
-        with:
-          python-version: '3.9'
-
-      - name: Create profiles.yml for dev
-        run: |
-          mkdir -p ~/.dbt
-          cat <<EOF > ~/.dbt/profiles.yml
-          real_estate_valuation_fusion:
-            outputs:
-              dev:
-                type: snowflake
-                account: ${{ secrets.SNOWFLAKE_ACCOUNT }}
-                user: ${{ secrets.SNOWFLAKE_USER }}
-                password: ${{ secrets.SNOWFLAKE_PASSWORD }}
-                role: ${{ secrets.SNOWFLAKE_ROLE }}
-                database: REAL_ESTATE_VAL_DEV
-                warehouse: ${{ secrets.SNOWFLAKE_WAREHOUSE }}
-                schema: STAGING
-                threads: 4
-            target: dev
-          EOF
-
-      - name: Run dbtf models in dev
-        run: ~/.local/bin/dbtf run --target dev
-
-      - name: Run snapshots in dev
-        run: ~/.local/bin/dbtf snapshot --target dev
-
   deploy-prod:
     runs-on: ubuntu-latest
-    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -83,6 +33,7 @@ jobs:
           mkdir -p ~/.dbt
           cat <<EOF > ~/.dbt/profiles.yml
           real_estate_valuation_fusion:
+            target: prod
             outputs:
               prod:
                 type: snowflake
@@ -94,7 +45,6 @@ jobs:
                 warehouse: ${{ secrets.SNOWFLAKE_WAREHOUSE }}
                 schema: STAGING
                 threads: 4
-            target: prod
           EOF
 
       - name: Run dbtf models in prod

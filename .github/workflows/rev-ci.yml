@@ -18,7 +18,7 @@ jobs:
         run: |
           curl -fsSL https://public.cdn.getdbt.com/fs/install/install.sh | sh -s -- --update
           mkdir -p ~/.local/bin
-          ln -s ~/.local/bin/dbt ~/.local/bin/dbtf  # Symlink so we can use `dbtf` as command
+          ln -s ~/.local/bin/dbt ~/.local/bin/dbtf
           echo "$HOME/.local/bin" >> $GITHUB_PATH
 
       - name: Confirm dbtf installed
@@ -34,7 +34,7 @@ jobs:
           python -m pip install --upgrade pip setuptools wheel
           pip install -r requirements.txt
 
-      - name: Create Snowflake profiles.yml
+      - name: Create Snowflake profiles.yml for dev
         run: |
           mkdir -p ~/.dbt
           cat <<EOF > ~/.dbt/profiles.yml
@@ -53,13 +53,19 @@ jobs:
                 threads: 4
           EOF
 
-      - name: Run dbt debug
+      - name: Run dbtf debug
         run: ~/.local/bin/dbtf debug --profiles-dir ~/.dbt --profile real_estate_valuation_fusion --target dev
-      - name: Run dbt compile
+
+      - name: Run dbtf compile
         run: ~/.local/bin/dbtf compile --target dev 
 
       - name: Run data tests
         run: ~/.local/bin/dbtf test --select tag:data_tests --target dev 
 
       - name: Run unit tests
-        run: ~/.local/bin/dbtf test --select tag:unit_tests --target dev 
+        run: ~/.local/bin/dbtf test --select tag:unit_tests --target dev
+
+      - name: Deploy to dev environment
+        run: ~/.local/bin/dbtf run --target dev
+      - name: Run snapshots in dev
+        run: ~/.local/bin/dbtf snapshot --target dev
