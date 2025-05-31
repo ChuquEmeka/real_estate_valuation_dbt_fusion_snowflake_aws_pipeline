@@ -24,7 +24,7 @@ jobs:
         run: |
           curl -fsSL https://public.cdn.getdbt.com/fs/install/install.sh | sh -s -- --update
           echo "/home/runner/.local/bin" >> $GITHUB_PATH
-          dbtf --version
+          PATH="/home/runner/.local/bin:$PATH" dbtf --version
 
       - name: Create profiles.yml
         run: |
@@ -56,13 +56,13 @@ jobs:
           EOF
 
       - name: Run dbt debug
-        run: dbtf debug --profiles-dir ~/.dbt --profile real_estate_valuation_fusion --target dev
+        run: PATH="/home/runner/.local/bin:$PATH" dbtf debug --profiles-dir ~/.dbt --profile real_estate_valuation_fusion --target dev
 
       - name: Run dbt compile
-        run: dbtf compile --target dev
+        run: PATH="/home/runner/.local/bin:$PATH" dbtf compile --target dev
 
       - name: Run data tests
-        run: dbtf test --select tag:data_tests --target dev
+        run: PATH="/home/runner/.local/bin:$PATH" dbtf test --select tag:data_tests --target dev
 
       - name: Run unit tests
-        run: dbtf test --select tag:unit_tests --target dev
+        run: PATH="/home/runner/.local/bin:$PATH" dbtf test --select tag:unit_tests --target dev

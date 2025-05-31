@@ -25,7 +25,7 @@ jobs:
         run: |
           curl -fsSL https://public.cdn.getdbt.com/fs/install/install.sh | sh -s -- --update
           echo "/home/runner/.local/bin" >> $GITHUB_PATH
-          dbtf --version
+          PATH="/home/runner/.local/bin:$PATH" dbtf --version
 
       - name: Create profiles.yml
         run: |
@@ -57,10 +57,10 @@ jobs:
           EOF
 
       - name: Run dbt models in dev
-        run: dbtf run --target dev
+        run: PATH="/home/runner/.local/bin:$PATH" dbtf run --target dev
 
       - name: Run snapshot in dev
-        run: dbtf snapshot --target dev
+        run: PATH="/home/runner/.local/bin:$PATH" dbtf snapshot --target dev
 
   deploy-prod:
     runs-on: ubuntu-latest
@@ -78,7 +78,7 @@ jobs:
         run: |
           curl -fsSL https://public.cdn.getdbt.com/fs/install/install.sh | sh -s -- --update
           echo "/home/runner/.local/bin" >> $GITHUB_PATH
-          dbtf --version
+          PATH="/home/runner/.local/bin:$PATH" dbtf --version
 
       - name: Create profiles.yml
         run: |
@@ -110,10 +110,10 @@ jobs:
           EOF
 
       - name: Run dbt models in prod
-        run: dbtf run --target prod
+        run: PATH="/home/runner/.local/bin:$PATH" dbtf run --target prod
 
       - name: Run snapshot in prod
-        run: dbtf snapshot --target prod
+        run: PATH="/home/runner/.local/bin:$PATH" dbtf snapshot --target prod
 
       - name: Run data tests in prod
-        run: dbtf test --select tag:data_tests --target prod
+        run: PATH="/home/runner/.local/bin:$PATH" dbtf test --select tag:data_tests --target prod
