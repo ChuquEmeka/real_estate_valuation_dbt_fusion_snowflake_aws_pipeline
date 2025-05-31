@@ -59,11 +59,14 @@ jobs:
       - name: Run dbtf compile
         run: ~/.local/bin/dbtf compile --target dev 
 
-      - name: Run data tests
-        run: ~/.local/bin/dbtf test --select tag:data_tests --target dev 
+    #   - name: Run data tests
+    #     run: ~/.local/bin/dbtf test --select tag:data_tests --target dev 
 
-      - name: Run unit tests
-        run: ~/.local/bin/dbtf test --select tag:unit_tests --target dev
+      - name: Run data tests
+        run: ~/.local/bin/dbtf test --target dev 
+
+    #   - name: Run unit tests
+    #     run: ~/.local/bin/dbtf test --select tag:unit_tests --target dev
 
       - name: Deploy to dev environment
         run: ~/.local/bin/dbtf run --target dev
