@@ -56,10 +56,10 @@ jobs:
       - name: Run dbt debug
         run: ~/.local/bin/dbtf debug --profiles-dir ~/.dbt --profile real_estate_valuation_fusion --target dev
       - name: Run dbt compile
-        run: ~/.local/bin/dbtf compile --target dev --log-level INFO --log-format text
+        run: ~/.local/bin/dbtf compile --target dev --log-level DEBUG --log-format json
 
       - name: Run data tests
-        run: ~/.local/bin/dbtf test --select tag:data_tests --target dev --log-level INFO --log-format text --fail-fast
+        run: ~/.local/bin/dbtf test --select tag:data_tests --target dev --log-level DEBUG --log-format json
 
       - name: Run unit tests
-        run: ~/.local/bin/dbtf test --select tag:unit_tests --target dev --log-level INFO --log-format text --fail-fast
+        run: ~/.local/bin/dbtf test --select tag:unit_tests --target dev --log-level DEBUG --log-format json
