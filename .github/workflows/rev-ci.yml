@@ -14,14 +14,15 @@ jobs:
       - name: Checkout Code
         uses: actions/checkout@v3
 
-      - name: Install dbtf CLI
+      - name: Install dbt-fusion CLI (dbtf)
         run: |
           curl -fsSL https://public.cdn.getdbt.com/fs/install/install.sh | sh -s -- --update
+          mkdir -p ~/.local/bin
+          ln -s ~/.local/bin/dbt ~/.local/bin/dbtf  # Symlink so we can use `dbtf` as command
           echo "$HOME/.local/bin" >> $GITHUB_PATH
-          echo "alias dbtf=$HOME/.local/bin/dbt" >> ~/.bashrc
-          source ~/.bashrc
-          ls -l $HOME/.local/bin
-          /home/runner/.local/bin/dbt --version
+
+      - name: Confirm dbtf installed
+        run: ~/.local/bin/dbtf --version
 
       - name: Set up Python
         uses: actions/setup-python@v4
@@ -53,13 +54,13 @@ jobs:
           EOF
 
       - name: Run dbt debug
-        run: /home/runner/.local/bin/dbtf debug --profiles-dir ~/.dbt --profile real_estate_valuation_fusion --target dev
+        run: ~/.local/bin/dbtf debug --profiles-dir ~/.dbt --profile real_estate_valuation_fusion --target dev
 
       - name: Run dbt compile
-        run: /home/runner/.local/bin/dbtf compile --target dev
+        run: ~/.local/bin/dbtf compile --target dev
 
       - name: Run data tests
-        run: /home/runner/.local/bin/dbtf test --select tag:data_tests --target dev
+        run: ~/.local/bin/dbtf test --select tag:data_tests --target dev
 
       - name: Run unit tests
-        run: /home/runner/.local/bin/dbtf test --select tag:unit_tests --target dev
+        run: ~/.local/bin/dbtf test --select tag:unit_tests --target dev
