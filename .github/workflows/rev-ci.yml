@@ -59,7 +59,7 @@ jobs:
         run: ~/.local/bin/dbtf compile --target dev --log-level INFO
 
       - name: Run data tests
-        run: ~/.local/bin/dbtf test --select tag:data_tests --target dev --log-level INFO
+        run: ~/.local/bin/dbtf test --select tag:data_tests --target dev --log-level INFO --log-format console --fail-fast
 
       - name: Run unit tests
-        run: ~/.local/bin/dbtf test --select tag:unit_tests --target dev --log-level INFO
+        run: ~/.local/bin/dbtf test --select tag:unit_tests --target dev --log-level INFO --log-format console --fail-fast
