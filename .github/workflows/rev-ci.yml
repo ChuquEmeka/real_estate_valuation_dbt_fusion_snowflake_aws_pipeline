@@ -20,10 +20,8 @@ jobs:
       - name: Install dbt Fusion
         run: |
           curl -fsSL https://public.cdn.getdbt.com/fs/install/install.sh | sh -s -- --update
-          dbtf --version
-
-      - name: Reload shell environment
-        run: source ~/.bashrc
+          echo "$HOME/.local/bin" >> $GITHUB_PATH  # Critical fix
+          dbtf --version  # Now works in subsequent steps
 
       - name: Create profiles.yml
         run: |
