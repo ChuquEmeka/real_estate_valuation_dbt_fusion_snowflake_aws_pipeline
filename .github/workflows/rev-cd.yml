@@ -1,123 +1,63 @@
-name: CD for real_estate_valuation_fusion
+name: CD for dbtf Models
 
 on:
-  pull_request:
-    branches:
-      - main
   push:
     branches:
       - main
 
 jobs:
-  deploy-dev:
+  deploy:
+    name: Deploy dbtf Project
     runs-on: ubuntu-latest
-    if: github.event_name == 'pull_request'
+
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
+      - name: Checkout Code
+        uses: actions/checkout@v3
 
-      - name: Set up Python
-        uses: actions/setup-python@v5
-        with:
-          python-version: '3.9'
-
-      - name: Install dbt Fusion
+      - name: Install dbt-fusion CLI (dbtf)
         run: |
           curl -fsSL https://public.cdn.getdbt.com/fs/install/install.sh | sh -s -- --update
-          echo "/home/runner/.local/bin" >> $GITHUB_PATH
+          mkdir -p ~/.local/bin
+          ln -s ~/.local/bin/dbt ~/.local/bin/dbtf  # Symlink for dbtf command
+          echo "$HOME/.local/bin" >> $GITHUB_PATH
 
-      - name: Check dbt Fusion version
-        run: /home/runner/.local/bin/dbtf --version
+      - name: Confirm dbtf installed
+        run: ~/.local/bin/dbtf --version
 
-      - name: Create profiles.yml
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.10'
+
+      - name: Install Python dependencies
+        run: |
+          python -m pip install --upgrade pip setuptools wheel
+          pip install -r requirements.txt
+
+      - name: Create Snowflake profiles.yml
         run: |
           mkdir -p ~/.dbt
           cat <<EOF > ~/.dbt/profiles.yml
           real_estate_valuation_fusion:
-            outputs:
-              dev:
-                type: snowflake
-                account: ${{ secrets.SNOWFLAKE_ACCOUNT }}
-                user: ${{ secrets.SNOWFLAKE_USER }}
-                password: ${{ secrets.SNOWFLAKE_PASSWORD }}
-                role: ${{ secrets.SNOWFLAKE_ROLE }}
-                database: REAL_ESTATE_VAL_DEV
-                warehouse: ${{ secrets.SNOWFLAKE_WAREHOUSE }}
-                schema: STAGING
-                threads: 4
-              prod:
-                type: snowflake
-                account: ${{ secrets.SNOWFLAKE_ACCOUNT }}
-                user: ${{ secrets.SNOWFLAKE_USER }}
-                password: ${{ secrets.SNOWFLAKE_PASSWORD }}
-                role: ${{ secrets.SNOWFLAKE_ROLE }}
-                database: REAL_ESTATE_VAL_PROD
-                warehouse: ${{ secrets.SNOWFLAKE_WAREHOUSE }}
-                schema: STAGING
-                threads: 4
             target: dev
-          EOF
-
-      - name: Run dbt models in dev
-        run: /home/runner/.local/bin/dbtf run --target dev
-
-      - name: Run snapshot in dev
-        run: /home/runner/.local/bin/dbtf snapshot --target dev
-
-  deploy-prod:
-    runs-on: ubuntu-latest
-    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-
-      - name: Set up Python
-        uses: actions/setup-python@v5
-        with:
-          python-version: '3.9'
-
-      - name: Install dbt Fusion
-        run: |
-          curl -fsSL https://public.cdn.getdbt.com/fs/install/install.sh | sh -s -- --update
-          echo "/home/runner/.local/bin" >> $GITHUB_PATH
-
-      - name: Check dbt Fusion version
-        run: /home/runner/.local/bin/dbtf --version
-
-      - name: Create profiles.yml
-        run: |
-          mkdir -p ~/.dbt
-          cat <<EOF > ~/.dbt/profiles.yml
-          real_estate_valuation_fusion:
             outputs:
               dev:
                 type: snowflake
-                account: ${{ secrets.SNOWFLAKE_ACCOUNT }}
-                user: ${{ secrets.SNOWFLAKE_USER }}
-                password: ${{ secrets.SNOWFLAKE_PASSWORD }}
-                role: ${{ secrets.SNOWFLAKE_ROLE }}
-                database: REAL_ESTATE_VAL_DEV
-                warehouse: ${{ secrets.SNOWFLAKE_WAREHOUSE }}
-                schema: STAGING
-                threads: 4
-              prod:
-                type: snowflake
-                account: ${{ secrets.SNOWFLAKE_ACCOUNT }}
-                user: ${{ secrets.SNOWFLAKE_USER }}
-                password: ${{ secrets.SNOWFLAKE_PASSWORD }}
-                role: ${{ secrets.SNOWFLAKE_ROLE }}
+                account: "${{ secrets.SNOWFLAKE_ACCOUNT }}"
+                user: "${{ secrets.SNOWFLAKE_USER }}"
+                password: "${{ secrets.SNOWFLAKE_PASSWORD }}"
+                role: "${{ secrets.SNOWFLAKE_ROLE }}"
                 database: REAL_ESTATE_VAL_PROD
-                warehouse: ${{ secrets.SNOWFLAKE_WAREHOUSE }}
-                schema: STAGING
+                warehouse: COMPUTE_WH
+                schema: CORE
                 threads: 4
-            target: prod
           EOF
 
-      - name: Run dbt models in prod
-        run: /home/runner/.local/bin/dbtf run --target prod
+      - name: Run dbtf debug
+        run: ~/.local/bin/dbtf debug --profiles-dir ~/.dbt --profile real_estate_valuation_fusion --target dev
 
-      - name: Run snapshot in prod
-        run: /home/runner/.local/bin/dbtf snapshot --target prod
+      - name: Run dbtf run (deploy models)
+        run: ~/.local/bin/dbtf run --target dev
 
-      - name: Run data tests in prod
-        run: /home/runner/.local/bin/dbtf test --select tag:data_tests --target prod
+      - name: Run dbtf test after deploy
+        run: ~/.local/bin/dbtf test --select tag:data_tests --target dev
