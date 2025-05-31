@@ -1,12 +1,12 @@
-{{ config(materialized='table') }}
+{{ config(materialized="table") }}
 
-SELECT
-  p.borough,
-  DATE_TRUNC('year', f.transaction_date) AS year,
-  AVG(p.cap_rate) AS avg_cap_rate,
-  COUNT(DISTINCT f.property_id) AS property_count
-FROM {{ ref('fct_transactions') }} f
-JOIN {{ ref('dim_properties') }} p ON f.property_id = p.property_id
-WHERE p.cap_rate IS NOT NULL
-GROUP BY p.borough, year
-ORDER BY p.borough, year
+select
+    p.borough,
+    date_trunc('year', f.transaction_date) as year,
+    avg(p.cap_rate) as avg_cap_rate,
+    count(distinct f.property_id) as property_count
+from {{ ref("fct_transactions") }} f
+join {{ ref("dim_properties") }} p on f.property_id = p.property_id
+where p.cap_rate is not null
+group by p.borough, year
+order by p.borough, year
