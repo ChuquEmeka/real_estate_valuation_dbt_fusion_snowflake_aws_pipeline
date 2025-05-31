@@ -1,22 +1,18 @@
-{{ config(materialized='table') }}
+{{ config(materialized="table") }}
 
-WITH energy_effect AS (
-  SELECT
-    p.borough,
-    p.property_type,
-    p.energy_rating,
-    AVG(f.price_per_sqm) AS avg_price_per_sqm,
-    COUNT(DISTINCT p.property_id) AS properties_count
-  FROM {{ ref('fct_transactions') }} f
-  JOIN {{ ref('dim_properties') }} p ON f.property_id = p.property_id
-  GROUP BY 1, 2, 3
-)
+with
+    energy_effect as (
+        select
+            p.borough,
+            p.property_type,
+            p.energy_rating,
+            avg(f.price_per_sqm) as avg_price_per_sqm,
+            count(distinct p.property_id) as properties_count
+        from {{ ref("fct_transactions") }} f
+        join {{ ref("dim_properties") }} p on f.property_id = p.property_id
+        group by 1, 2, 3
+    )
 
-SELECT
-  borough,
-  property_type,
-  energy_rating,
-  avg_price_per_sqm,
-  properties_count
-FROM energy_effect
-ORDER BY borough, property_type, energy_rating
+select borough, property_type, energy_rating, avg_price_per_sqm, properties_count
+from energy_effect
+order by borough, property_type, energy_rating

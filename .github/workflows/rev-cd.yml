@@ -16,19 +16,22 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
+      - name: Install dbt-fusion CLI (dbtf)
+        run: |
+          curl -fsSL https://public.cdn.getdbt.com/fs/install/install.sh | sh -s -- --update
+          mkdir -p ~/.local/bin
+          ln -s ~/.local/bin/dbt ~/.local/bin/dbtf
+          echo "$HOME/.local/bin" >> $GITHUB_PATH
+
+      - name: Confirm dbtf installed
+        run: ~/.local/bin/dbtf --version
+
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
           python-version: '3.9'
 
-      - name: Install dbt Fusion
-        run: |
-          curl -fsSL https://public.cdn.getdbt.com/fs/install/install.sh | sh -s -- --update
-
-      - name: Install Python dependencies
-        run: pip install dbt-snowflake
-
-      - name: Create profiles.yml
+      - name: Create profiles.yml for dev
         run: |
           mkdir -p ~/.dbt
           cat <<EOF > ~/.dbt/profiles.yml
@@ -44,24 +47,14 @@ jobs:
                 warehouse: ${{ secrets.SNOWFLAKE_WAREHOUSE }}
                 schema: STAGING
                 threads: 4
-              prod:
-                type: snowflake
-                account: ${{ secrets.SNOWFLAKE_ACCOUNT }}
-                user: ${{ secrets.SNOWFLAKE_USER }}
-                password: ${{ secrets.SNOWFLAKE_PASSWORD }}
-                role: ${{ secrets.SNOWFLAKE_ROLE }}
-                database: REAL_ESTATE_VAL_PROD
-                warehouse: ${{ secrets.SNOWFLAKE_WAREHOUSE }}
-                schema: STAGING
-                threads: 4
             target: dev
           EOF
 
-      - name: Run dbt models in dev
-        run: dbtf run --target dev
+      - name: Run dbtf models in dev
+        run: ~/.local/bin/dbtf run --target dev
 
-      - name: Run snapshot in dev
-        run: dbtf snapshot --target dev
+      - name: Run snapshots in dev
+        run: ~/.local/bin/dbtf snapshot --target dev
 
   deploy-prod:
     runs-on: ubuntu-latest
@@ -70,34 +63,27 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
+      - name: Install dbt-fusion CLI (dbtf)
+        run: |
+          curl -fsSL https://public.cdn.getdbt.com/fs/install/install.sh | sh -s -- --update
+          mkdir -p ~/.local/bin
+          ln -s ~/.local/bin/dbt ~/.local/bin/dbtf
+          echo "$HOME/.local/bin" >> $GITHUB_PATH
+
+      - name: Confirm dbtf installed
+        run: ~/.local/bin/dbtf --version
+
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
           python-version: '3.9'
 
-      - name: Install dbt Fusion
-        run: |
-          curl -fsSL https://public.cdn.getdbt.com/fs/install/install.sh | sh -s -- --update
-
-      - name: Install Python dependencies
-        run: pip install dbt-snowflake
-
-      - name: Create profiles.yml
+      - name: Create profiles.yml for prod
         run: |
           mkdir -p ~/.dbt
           cat <<EOF > ~/.dbt/profiles.yml
           real_estate_valuation_fusion:
             outputs:
-              dev:
-                type: snowflake
-                account: ${{ secrets.SNOWFLAKE_ACCOUNT }}
-                user: ${{ secrets.SNOWFLAKE_USER }}
-                password: ${{ secrets.SNOWFLAKE_PASSWORD }}
-                role: ${{ secrets.SNOWFLAKE_ROLE }}
-                database: REAL_ESTATE_VAL_DEV
-                warehouse: ${{ secrets.SNOWFLAKE_WAREHOUSE }}
-                schema: STAGING
-                threads: 4
               prod:
                 type: snowflake
                 account: ${{ secrets.SNOWFLAKE_ACCOUNT }}
@@ -111,11 +97,11 @@ jobs:
             target: prod
           EOF
 
-      - name: Run dbt models in prod
-        run: dbtf run --target prod
+      - name: Run dbtf models in prod
+        run: ~/.local/bin/dbtf run --target prod
 
-      - name: Run snapshot in prod
-        run: dbtf snapshot --target prod
+      - name: Run snapshots in prod
+        run: ~/.local/bin/dbtf snapshot --target prod
 
       - name: Run data tests in prod
-        run: dbtf test --select tag:data_tests --target prod
+        run: ~/.local/bin/dbtf test --select tag:data_tests --target prod

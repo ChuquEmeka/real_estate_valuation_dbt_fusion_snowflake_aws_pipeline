@@ -1,4 +1,2 @@
 -- Price per sqm must be greater than 0
-SELECT *
-FROM {{ ref('fct_transactions') }}
-WHERE price_per_sqm <= 0
+select * from {{ ref("fct_transactions") }} where price_per_sqm <= 0

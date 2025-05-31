@@ -1,4 +1,2 @@
 -- Ensure no negative sale prices exist
-SELECT *
-FROM {{ ref('fct_transactions') }}
-WHERE sale_price < 0
+select * from {{ ref("fct_transactions") }} where sale_price < 0

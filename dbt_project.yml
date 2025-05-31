@@ -1,7 +1,7 @@
-name: 'real_estate_valuation_fusion'
-version: '1.0.0'
+name: "real_estate_valuation_fusion"
+version: "1.0.0"
 
-profile: 'real_estate_valuation_fusion'
+profile: "real_estate_valuation_fusion"
 
 target-path: "target"
 clean-targets:
