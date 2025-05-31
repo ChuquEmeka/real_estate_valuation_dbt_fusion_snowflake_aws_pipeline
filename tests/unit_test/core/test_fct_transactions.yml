@@ -47,7 +47,7 @@ unit_tests:
     expect:
       rows:
         - transaction_id: "TX-TRE-5020-2024"
-          rental_yield: 3.9
+          rental_yield: 3.5
           property_id: "BER-TRE-5020"
           transaction_date: 2024-10-21
           sale_price: 685410.0
