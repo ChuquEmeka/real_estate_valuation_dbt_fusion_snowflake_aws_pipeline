@@ -1,61 +1,55 @@
-name: CI for real_estate_valuation_fusion
+name: CI for dbtf Models
 
 on:
   pull_request:
     branches:
       - main
-  push:
-    branches:
-      - dev
 
 jobs:
-  ci:
+  test:
+    name: Run dbtf CI Tests
     runs-on: ubuntu-latest
+
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
+      - name: Checkout Code
+        uses: actions/checkout@v3
 
-      - name: Set up Python
-        uses: actions/setup-python@v5
-        with:
-          python-version: '3.9'
-
-      - name: Install dbt Fusion
+      - name: Install dbtf CLI
         run: |
           curl -fsSL https://public.cdn.getdbt.com/fs/install/install.sh | sh -s -- --update
-          echo "/home/runner/.local/bin" >> $GITHUB_PATH
+          echo "$HOME/.local/bin" >> $GITHUB_PATH
+          echo "alias dbtf=$HOME/.local/bin/dbt" >> ~/.bashrc
+          source ~/.bashrc
+          ls -l $HOME/.local/bin
+          /home/runner/.local/bin/dbt --version
 
-      - name: Check dbt Fusion version
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.10'
+
+      - name: Install Python dependencies
         run: |
-          /home/runner/.local/bin/dbtf --version
+          python -m pip install --upgrade pip setuptools wheel
+          pip install -r requirements.txt
 
-      - name: Create profiles.yml
+      - name: Create Snowflake profiles.yml
         run: |
           mkdir -p ~/.dbt
           cat <<EOF > ~/.dbt/profiles.yml
           real_estate_valuation_fusion:
+            target: dev
             outputs:
               dev:
                 type: snowflake
-                account: ${{ secrets.SNOWFLAKE_ACCOUNT }}
-                user: ${{ secrets.SNOWFLAKE_USER }}
-                password: ${{ secrets.SNOWFLAKE_PASSWORD }}
-                role: ${{ secrets.SNOWFLAKE_ROLE }}
+                account: "${{ secrets.SNOWFLAKE_ACCOUNT }}"
+                user: "${{ secrets.SNOWFLAKE_USER }}"
+                password: "${{ secrets.SNOWFLAKE_PASSWORD }}"
+                role: "${{ secrets.SNOWFLAKE_ROLE }}"
                 database: REAL_ESTATE_VAL_DEV
-                warehouse: ${{ secrets.SNOWFLAKE_WAREHOUSE }}
+                warehouse: COMPUTE_WH
                 schema: STAGING
                 threads: 4
-              prod:
-                type: snowflake
-                account: ${{ secrets.SNOWFLAKE_ACCOUNT }}
-                user: ${{ secrets.SNOWFLAKE_USER }}
-                password: ${{ secrets.SNOWFLAKE_PASSWORD }}
-                role: ${{ secrets.SNOWFLAKE_ROLE }}
-                database: REAL_ESTATE_VAL_PROD
-                warehouse: ${{ secrets.SNOWFLAKE_WAREHOUSE }}
-                schema: STAGING
-                threads: 4
-            target: dev
           EOF
 
       - name: Run dbt debug
