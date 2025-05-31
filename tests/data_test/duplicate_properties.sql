@@ -1,5 +1,5 @@
 -- No duplicate property_id entries in dim_properties
-SELECT property_id, COUNT(*)
-FROM {{ ref('dim_properties') }}
-GROUP BY property_id
-HAVING COUNT(*) > 1
+select property_id, count(*)
+from {{ ref("dim_properties") }}
+group by property_id
+having count(*) > 1

@@ -1,50 +1,45 @@
-{{ config(
-    materialized='incremental',
-    unique_key='property_id'
-) }}
+{{ config(materialized="incremental", unique_key="property_id") }}
 
-WITH latest_transactions AS (
-  SELECT
-    property_id,
-    MAX(transaction_date) AS latest_transaction_date
-  FROM {{ ref('fct_transactions') }}
-  GROUP BY property_id
-),
+with
+    latest_transactions as (
+        select property_id, max(transaction_date) as latest_transaction_date
+        from {{ ref("fct_transactions") }}
+        group by property_id
+    ),
 
-trend_valuation AS (
-  SELECT
+    trend_valuation as (
+        select
+            p.property_id,
+            max(f.transaction_date) as last_transaction_date,
+            max(f.price_per_sqm) * p.size_sqm as valuation_trend
+        from {{ ref("dim_properties") }} p
+        join {{ ref("fct_transactions") }} f on p.property_id = f.property_id
+        group by p.property_id, p.size_sqm
+    ),
+
+    income_valuation as (
+        select
+            property_id,
+            {{ valuation_income_approach("median_income") }} as valuation_income
+        from {{ ref("dim_properties") }}
+    )
+
+select
     p.property_id,
-    MAX(f.transaction_date) AS last_transaction_date,
-    MAX(f.price_per_sqm) * p.size_sqm AS valuation_trend
-  FROM {{ ref('dim_properties') }} p
-  JOIN {{ ref('fct_transactions') }} f ON p.property_id = f.property_id
-  GROUP BY p.property_id, p.size_sqm
-),
-
-income_valuation AS (
-  SELECT
-    property_id,
-    {{ valuation_income_approach('median_income') }} AS valuation_income
-  FROM {{ ref('dim_properties') }}
-)
-
-SELECT
-  p.property_id,
-  p.borough,
-  p.property_type,
-  p.size_sqm,
-  p.total_rooms,
-  lt.latest_transaction_date,
-  t.valuation_trend,
-  i.valuation_income
-FROM {{ ref('dim_properties') }} p
-LEFT JOIN latest_transactions lt ON p.property_id = lt.property_id
-LEFT JOIN trend_valuation t ON p.property_id = t.property_id
-LEFT JOIN income_valuation i ON p.property_id = i.property_id
+    p.borough,
+    p.property_type,
+    p.size_sqm,
+    p.total_rooms,
+    lt.latest_transaction_date,
+    t.valuation_trend,
+    i.valuation_income
+from {{ ref("dim_properties") }} p
+left join latest_transactions lt on p.property_id = lt.property_id
+left join trend_valuation t on p.property_id = t.property_id
+left join income_valuation i on p.property_id = i.property_id
 
 {% if is_incremental() %}
-WHERE lt.latest_transaction_date > (
-    SELECT MAX(latest_transaction_date)
-    FROM {{ this }}
-)
+    where
+        lt.latest_transaction_date
+        > (select max(latest_transaction_date) from {{ this }})
 {% endif %}

@@ -70,7 +70,7 @@ models:
           - numeric_range:
               column_name: sale_price
               min_value: 0
-              max_value: 1000000000  # Adjustable
+              max_value: 1000000000 # Adjustable
 
       - name: price_per_sqm
         description: "Price per square meter of the property."
@@ -79,4 +79,4 @@ models:
           - numeric_range:
               column_name: price_per_sqm
               min_value: 0
-              max_value: 100000  # Adjustable
+              max_value: 100000 # Adjustable

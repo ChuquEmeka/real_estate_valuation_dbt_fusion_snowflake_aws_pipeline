@@ -1,33 +1,40 @@
-{{ config(materialized='table') }}
+{{ config(materialized="table") }}
 
-WITH monthly_prices AS (
-  SELECT
-    DATE_TRUNC('month', transaction_date) AS month,
-    borough,
-    property_type,
-    AVG(price_per_sqm) AS avg_price_per_sqm,
-    COUNT(*) AS transactions_count
-  FROM {{ ref('fct_transactions') }} f
-  JOIN {{ ref('dim_properties') }} p ON f.property_id = p.property_id
-  GROUP BY 1, 2, 3
-),
+with
+    monthly_prices as (
+        select
+            date_trunc('month', transaction_date) as month,
+            borough,
+            property_type,
+            avg(price_per_sqm) as avg_price_per_sqm,
+            count(*) as transactions_count
+        from {{ ref("fct_transactions") }} f
+        join {{ ref("dim_properties") }} p on f.property_id = p.property_id
+        group by 1, 2, 3
+    ),
 
-price_trend AS (
-  SELECT
-    month,
-    borough,
-    property_type,
-    avg_price_per_sqm,
-    LAG(avg_price_per_sqm) OVER (PARTITION BY borough, property_type ORDER BY month) AS prev_avg_price,
-    (avg_price_per_sqm - LAG(avg_price_per_sqm) OVER (PARTITION BY borough, property_type ORDER BY month)) / NULLIF(LAG(avg_price_per_sqm) OVER (PARTITION BY borough, property_type ORDER BY month), 0) AS month_pct_change
-  FROM monthly_prices
-)
+    price_trend as (
+        select
+            month,
+            borough,
+            property_type,
+            avg_price_per_sqm,
+            lag(avg_price_per_sqm) over (
+                partition by borough, property_type order by month
+            ) as prev_avg_price,
+            (
+                avg_price_per_sqm - lag(avg_price_per_sqm) over (
+                    partition by borough, property_type order by month
+                )
+            ) / nullif(
+                lag(avg_price_per_sqm) over (
+                    partition by borough, property_type order by month
+                ),
+                0
+            ) as month_pct_change
+        from monthly_prices
+    )
 
-SELECT
-  month,
-  borough,
-  property_type,
-  avg_price_per_sqm,
-  month_pct_change
-FROM price_trend
-ORDER BY borough, property_type, month
+select month, borough, property_type, avg_price_per_sqm, month_pct_change
+from price_trend
+order by borough, property_type, month
