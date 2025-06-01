@@ -1,63 +1,3 @@
-# name: CD for real_estate_valuation_fusion
-
-# on:
-#   push:
-#     branches:
-#       - main
-
-# jobs:
-#   deploy-prod:
-#     runs-on: ubuntu-latest
-
-#     steps:
-#       - name: Checkout code
-#         uses: actions/checkout@v4
-
-#       - name: Install dbt-fusion CLI (dbtf)
-#         run: |
-#           curl -fsSL https://public.cdn.getdbt.com/fs/install/install.sh | sh -s -- --update
-#           mkdir -p ~/.local/bin
-#           ln -s ~/.local/bin/dbt ~/.local/bin/dbtf
-#           echo "$HOME/.local/bin" >> $GITHUB_PATH
-
-#       - name: Confirm dbtf installed
-#         run: ~/.local/bin/dbtf --version
-
-#       - name: Set up Python
-#         uses: actions/setup-python@v5
-#         with:
-#           python-version: '3.9'
-
-#       - name: Create profiles.yml for prod
-#         run: |
-#           mkdir -p ~/.dbt
-#           cat <<EOF > ~/.dbt/profiles.yml
-#           real_estate_valuation_fusion:
-#             target: prod
-#             outputs:
-#               prod:
-#                 type: snowflake
-#                 account: ${{ secrets.SNOWFLAKE_ACCOUNT }}
-#                 user: ${{ secrets.SNOWFLAKE_USER }}
-#                 password: ${{ secrets.SNOWFLAKE_PASSWORD }}
-#                 role: ${{ secrets.SNOWFLAKE_ROLE }}
-#                 database: REAL_ESTATE_VAL_PROD
-#                 warehouse: ${{ secrets.SNOWFLAKE_WAREHOUSE }}
-#                 schema: STAGING
-#                 threads: 4
-#           EOF
-
-#       - name: Run dbtf models in prod
-#         run: ~/.local/bin/dbtf run --target prod
-
-#       - name: Run snapshots in prod
-#         run: ~/.local/bin/dbtf snapshot --target prod
-
-#       - name: Run data tests in prod
-#         run: ~/.local/bin/dbtf test --select tag:data_tests --target prod
-
-
-
 name: CD for real_estate_valuation_fusion
 
 on:
@@ -68,6 +8,7 @@ on:
 jobs:
   deploy-prod:
     runs-on: ubuntu-latest
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -106,11 +47,5 @@ jobs:
                 threads: 4
           EOF
 
-      - name: Run dbtf models in prod
-        run: ~/.local/bin/dbtf run --target prod
-
-      - name: Run snapshots in prod
-        run: ~/.local/bin/dbtf snapshot --target prod
-
-      - name: Run data tests in prod (exclude unit tests)
-        run: ~/.local/bin/dbtf test --exclude path:tests/unit_test --target prod
+      - name: Build all models, snapshots, and data tests in prod (exclude unit tests)
+        run: ~/.local/bin/dbtf build --exclude path:tests/unit_test --target prod
