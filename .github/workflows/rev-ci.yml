@@ -57,18 +57,7 @@ jobs:
         run: ~/.local/bin/dbtf debug --profiles-dir ~/.dbt --profile real_estate_valuation_fusion --target dev
 
       - name: Run dbtf compile
-        run: ~/.local/bin/dbtf compile --target dev 
+        run: ~/.local/bin/dbtf compile --target dev
 
-    #   - name: Run data tests
-    #     run: ~/.local/bin/dbtf test --select tag:data_tests --target dev 
-
-      - name: Run data tests
-        run: ~/.local/bin/dbtf test --target dev 
-
-    #   - name: Run unit tests
-    #     run: ~/.local/bin/dbtf test --select tag:unit_tests --target dev
-
-      - name: Deploy to dev environment
-        run: ~/.local/bin/dbtf run --target dev
-      - name: Run snapshots in dev
-        run: ~/.local/bin/dbtf snapshot --target dev
+      - name: Build all models, snapshots, and tests (data & unit) in dev
+        run: ~/.local/bin/dbtf build --target dev
