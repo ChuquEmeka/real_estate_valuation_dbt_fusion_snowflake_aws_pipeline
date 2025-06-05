@@ -52,85 +52,85 @@ This project follows best practices for scalable, maintainable data pipelines, e
 
 ## Project Structure
 
+```sql
 
-
-## Project Structure
-- .dbt/
-- .github/
-  - workflows/
-    - [rev-cd.yml](./.github/workflows/rev-cd.yml)
-    - [rev-ci.yml](./.github/workflows/rev-ci.yml)
-- .vscode/
-- dbt_internal_packages/
-- dbt_packages/
-- logs/
-- macros/
-  - tests/
-    - [test_numeric_range.sql](./macros/tests/test_numeric_range.sql)
-  - utils/
-    - [dev_filter_by_year.sql](./macros/utils/dev_filter_by_year.sql)
-    - [flatten_property_transactions.sql](./macros/utils/flatten_property_transactions.sql)
-    - [generate_schema_name.sql](./macros/utils/generate_schema_name.sql)
-    - [run_custom_query.sql](./macros/utils/run_custom_query.sql)
-    - [staging_filters.sql](./macros/utils/staging_filters.sql)
-    - [utility_macros.sql](./macros/utils/utility_macros.sql)
-    - [valuation_macros.sql](./macros/utils/valuation_macros.sql)
-  - [.gitkeep](./macros/.gitkeep)
-- models/
-  - analysis/
-    - [cap_rate_trends.sql](./models/analysis/cap_rate_trends.sql)
-    - [crime_rate_vs_price.sql](./models/analysis/crime_rate_vs_price.sql)
-    - [energy_efficiency_value_gain.sql](./models/analysis/energy_efficiency_value_gain.sql)
-    - [price_per_sqm_distribution.sql](./models/analysis/price_per_sqm_distribution.sql)
-    - [price_trends.sql](./models/analysis/price_trends.sql)
-    - [renovation_impact.sql](./models/analysis/renovation_impact.sql)
-    - [rental_yield_by_type.sql](./models/analysis/rental_yield_by_type.sql)
-    - [transport_access_impact.sql](./models/analysis/transport_access_impact.sql)
-  - core/
-    - [dim_properties.sql](./models/core/dim_properties.sql)
-    - [fct_transactions.sql](./models/core/fct_transactions.sql)
-  - marts/
-    - [current_property_valuation.sql](./models/marts/current_property_valuation.sql)
-    - [property_snapshot.sql](./models/marts/property_snapshot.sql)
-    - [valuation_summary.sql](./models/marts/valuation_summary.sql)
-  - quarantine/
-    - [quarantine_invalid_properties.sql](./models/quarantine/quarantine_invalid_properties.sql)
-    - [.gitkeep](./models/quarantine/.gitkeep)
-  - staging/
-    - [!staging_sources.yml](./models/staging/!staging_sources.yml)
-    - [stg_properties.sql](./models/staging/stg_properties.sql)
-    - [.gitkeep](./models/staging/.gitkeep)
-  - [.gitkeep](./models/.gitkeep)
-- seeds/
-- snapshots/
-  - dim_property/
-    - [snapshot_dim_property.sql](./snapshots/dim_property/snapshot_dim_property.sql)
-    - [.gitkeep](./snapshots/dim_property/.gitkeep)
-- target/
-- tests/
-  - data_test/
-    - [construction_year_valid.sql](./tests/data_test/construction_year_valid.sql)
-    - [duplicate_properties.sql](./tests/data_test/duplicate_properties.sql)
-    - [price_per_sqm_positive.sql](./tests/data_test/price_per_sqm_positive.sql)
-    - [!price_per_sqm_positive.sql](./tests/data_test/!price_per_sqm_positive.sql)
-    - [property_schema_tests.yml](./tests/data_test/property_schema_tests.yml)
-    - [sale_price_non_negative.sql](./tests/data_test/sale_price_non_negative.sql)
-    - [transactions_without_properties.sql](./tests/data_test/transactions_without_properties.sql)
-  - unit_test/
-    - core/
-      - [!test_dim_properties.yml](./tests/unit_test/core/!test_dim_properties.yml)
-      - [!test_fct_transactions.yml](./tests/unit_test/core/!test_fct_transactions.yml)
-    - staging/
-    - [.gitkeep](./tests/unit_test/staging/.gitkeep)
-  - [.gitkeep](./tests/.gitkeep)
-- venv/
-- [.gitignore](./.gitignore)
-- [dbt_project.yml](./dbt_project.yml)
-- [dev_data_part_1.json](./dev_data_part_1.json)
-- [package-lock.yml](./package-lock.yml)
-- [packages.yml](./packages.yml)
-- [raw_data_api.py](./raw_data_api.py)
-
+REAL_ESTATE_VALUATION_FUSION/
+├── .dbt/
+├── .github/
+│   └── workflows/
+│       ├── rev-cd.yml
+│       └── rev-ci.yml
+├── .vscode/
+├── dbt_internal_packages/
+├── dbt_packages/
+├── logs/
+├── macros/
+│   ├── tests/
+│   │   ├── test_numeric_range.sql
+│   ├── utils/
+│   │   ├── dev_filter_by_year.sql
+│   │   ├── flatten_property_transactions.sql
+│   │   ├── generate_schema_name.sql
+│   │   ├── run_custom_query.sql
+│   │   ├── staging_filters.sql
+│   │   ├── utility_macros.sql
+│   │   └── valuation_macros.sql
+│   └── .gitkeep
+├── models/
+│   ├── analysis/
+│   │   ├── cap_rate_trends.sql
+│   │   ├── crime_rate_vs_price.sql
+│   │   ├── energy_efficiency_value_gain.sql
+│   │   ├── price_per_sqm_distribution.sql
+│   │   ├── price_trends.sql
+│   │   ├── renovation_impact.sql
+│   │   ├── rental_yield_by_type.sql
+│   │   └── transport_access_impact.sql
+│   ├── core/
+│   │   ├── dim_properties.sql
+│   │   └── fct_transactions.sql
+│   ├── marts/
+│   │   ├── current_property_valuation.sql
+│   │   ├── property_snapshot.sql
+│   │   └── valuation_summary.sql
+│   ├── quarantine/
+│   │   ├── quarantine_invalid_properties.sql
+│   │   └── .gitkeep
+│   ├── staging/
+│   │   ├── !staging_sources.yml
+│   │   ├── stg_properties.sql
+│   │   └── .gitkeep
+│   └── .gitkeep
+├── seeds/
+├── snapshots/
+│   └── dim_property/
+│       ├── snapshot_dim_property.sql
+│       └── .gitkeep
+├── target/
+├── tests/
+│   ├── data_test/
+│   │   ├── construction_year_valid.sql
+│   │   ├── duplicate_properties.sql
+│   │   ├── price_per_sqm_positive.sql
+│   │   ├── !price_per_sqm_positive.sql
+│   │   ├── property_schema_tests.yml
+│   │   ├── sale_price_non_negative.sql
+│   │   └── transactions_without_properties.sql
+│   ├── unit_test/
+│   │   ├── core/
+│   │   │   ├── !test_dim_properties.yml
+│   │   │   └── !test_fct_transactions.yml
+│   │   ├── staging/
+│   │   └── .gitkeep
+│   └── .gitkeep
+├── venv/
+├── .gitignore
+├── dbt_project.yml
+├── dev_data_part_1.json
+├── package-lock.yml
+├── packages.yml
+└── raw_data_api.py
+```
 
 
 ## Step-by-Step Guide
