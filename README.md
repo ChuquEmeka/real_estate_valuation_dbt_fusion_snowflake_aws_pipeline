@@ -13,6 +13,7 @@ This project builds a data pipeline for real estate valuation using Snowflake, A
 
 ## Table of Contents
 - [Introduction](#introduction)
+- [Project Structure](#project-structure)
 - [Integrating AWS S3 with Snowflake](#integrating-aws-s3-with-snowflake)
 - [DBT Fusion Installation and Snowflake Connection Setup](#dbt-fusion-installation-and-snowflake-connection-setup)
 - [Setting Up and Working with DBT Extension with VS Code](#setting-up-and-working-with-dbt-extension-with-vs-code)
@@ -23,6 +24,30 @@ This project builds a data pipeline for real estate valuation using Snowflake, A
 - [Automating Testing and Deployment with dbt fusion CI/CD](#automating-testing-and-deployment-with-dbt-fusion-cicd)
 - [Deploying to dbt Cloud: Connecting the Git Repository and Creating Jobs](#deploying-to-dbt-cloud-connecting-the-git-repository-and-creating-jobs)
 - [Conclusion & Summary](#conclusion--summary)
+
+
+### Introduction
+
+This project implements an end-to-end real estate valuation data pipeline leveraging Snowflake as the data warehouse, AWS S3 as the data lake storage, and dbt Fusion (version 2.0.0-beta.13) for transformation and modeling. It features a modern data engineering workflow with automated CI/CD pipelines via GitHub Actions and production deployment through dbt Cloud.
+
+The pipeline is designed to ingest raw JSON property data from an S3 bucket into Snowflake using external stages and COPY INTO commands. The raw data is then processed through modular dbt models organized by schema and function, including staging, core marts, quarantining invalid records, and analytical models.
+
+Key components include:
+
+- Integration between AWS S3 and Snowflake for efficient data loading.
+
+- A robust dbt Fusion project setup with reusable macros, custom schema mappings, and snapshotting to track slowly changing dimensions.
+
+- Comprehensive data validation with both unit tests and data tests to ensure data quality and model correctness.
+
+- Use of quarantine tables to isolate and manage invalid data early in the pipeline.
+
+- Automated CI/CD workflows configured with GitHub Actions to enforce testing and seamless deployment across development and production environments.
+
+- Development and debugging facilitated through the dbt VS Code extension to visualize model lineage and preview query results.
+
+This project follows best practices for scalable, maintainable data pipelines, enabling reliable and transparent real estate valuation analytics.
+
 
 
 ## Project Structure
@@ -79,10 +104,6 @@ REAL_ESTATE_VALUATION_FUSION/
 
 
 ## Step-by-Step Guide
-
-### Introduction
-This section provides an overview of the video and what to expect. I briefly explain the architecture and goals of the end-to-end pipeline.
-
 
 ### Integrating AWS S3 with Snowflake
 I show how to create a Snowflake external stage connected to an AWS S3 bucket and how to use it to load data into Snowflake using the `COPY INTO` command.
