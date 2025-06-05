@@ -52,7 +52,7 @@ This project follows best practices for scalable, maintainable data pipelines, e
 
 ## Project Structure
 
-```sql
+
 
 REAL_ESTATE_VALUATION_FUSION/
 ├── .dbt/
@@ -130,7 +130,7 @@ REAL_ESTATE_VALUATION_FUSION/
 ├── [package-lock.yml](./package-lock.yml)
 ├── [packages.yml](./packages.yml)
 └── [raw_data_api.py](./raw_data_api.py)
-```
+
 
 
 ## Step-by-Step Guide
