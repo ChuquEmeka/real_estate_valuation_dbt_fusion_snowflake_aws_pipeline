@@ -65,12 +65,42 @@ REAL_ESTATE_VALUATION_FUSION/
 ├── dbt_packages/
 ├── logs/
 ├── macros/
+│   ├── tests/
+│   │   ├── test_numeric_range.sql
+│   ├── utils/
+│   │   ├── dev_filter_by_year.sql
+│   │   ├── flatten_property_transactions.sql
+│   │   ├── generate_schema_name.sql
+│   │   ├── run_custom_query.sql
+│   │   ├── staging_filters.sql
+│   │   ├── utility_macros.sql
+│   │   └── valuation_macros.sql
+│   └── .gitkeep
 ├── models/
 │   ├── analysis/
+│   │   ├── cap_rate_trends.sql
+│   │   ├── crime_rate_vs_price.sql
+│   │   ├── energy_efficiency_value_gain.sql
+│   │   ├── price_per_sqm_distribution.sql
+│   │   ├── price_trends.sql
+│   │   ├── renovation_impact.sql
+│   │   ├── rental_yield_by_type.sql
+│   │   └── transport_access_impact.sql
 │   ├── core/
+│   │   ├── dim_properties.sql
+│   │   └── fct_transactions.sql
 │   ├── marts/
+│   │   ├── current_property_valuation.sql
+│   │   ├── property_snapshot.sql
+│   │   └── valuation_summary.sql
 │   ├── quarantine/
-│   └── staging/
+│   │   ├── quarantine_invalid_properties.sql
+│   │   └── .gitkeep
+│   ├── staging/
+│   │   ├── !staging_sources.yml
+│   │   ├── stg_properties.sql
+│   │   └── .gitkeep
+│   └── .gitkeep
 ├── seeds/
 ├── snapshots/
 │   └── dim_property/
