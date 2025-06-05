@@ -521,7 +521,7 @@ A data pipeline with Snowflake, dbt Fusion, CI/CD, and dbt Cloud deployment. Wat
 
 ## Project Lineage
 The lineage graph shows: 
-![Lineage Graph](image/lineage_graph.png)
+![Lineage Graph](images/lineage_graph.png)
 
 ## YouTube Demo
 [Watch the demo](YOUR_YOUTUBE_LINK) for a detailed walkthrough.
