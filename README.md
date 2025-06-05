@@ -12,17 +12,19 @@ This project builds a data pipeline for real estate valuation using Snowflake, A
 - Windows PowerShell
 
 ## Table of Contents
-- [Introduction](#00000-introduction)
-- [Integrating AWS S3 with Snowflake](#00520-integrating-aws-s3-with-snowflake)
-- [DBT Fusion Installation and Snowflake Connection Setup](#01957-dbt-fusion-installation-and-snowflake-connection-setup)
-- [Setting Up and Working with DBT Extension with VS Code](#02926-setting-up-and-working-with-dbt-extension-with-vs-code)
-- [Creating and Using Macros & Quarantine Tables in dbtf](#03736-creating-and-using-macros--quarantine-tables-in-dbtf)
-- [DBT Data Validation: Unit Tests vs Data Tests](#05113-dbt-data-validation-unit-tests-vs-data-tests)
-- [Custom Schema Mapping for Model Organization](#010006-custom-schema-mapping-for-model-organization)
-- [Managing Slowly Changing Dimensions with dbt fusion Snapshots](#010246-managing-slowly-changing-dimensions-with-dbt-fusion-snapshots)
-- [Automating Testing and Deployment with dbt fusion CI/CD](#010559-automating-testing-and-deployment-with-dbt-fusion-cicd)
-- [Deploying to dbt Cloud: Connecting the Git Repository and Creating Jobs](#011746-deploying-to-dbt-cloud-connecting-the-git-repository-and-creating-jobs)
-- [Conclusion & Summary](#012616-conclusion--summary)
+## Table of Contents
+- [Introduction](#introduction)
+- [Integrating AWS S3 with Snowflake](#integrating-aws-s3-with-snowflake)
+- [DBT Fusion Installation and Snowflake Connection Setup](#dbt-fusion-installation-and-snowflake-connection-setup)
+- [Setting Up and Working with DBT Extension with VS Code](#setting-up-and-working-with-dbt-extension-with-vs-code)
+- [Creating and Using Macros & Quarantine Tables in dbtf](#creating-and-using-macros--quarantine-tables-in-dbtf)
+- [DBT Data Validation: Unit Tests vs Data Tests](#dbt-data-validation-unit-tests-vs-data-tests)
+- [Custom Schema Mapping for Model Organization](#custom-schema-mapping-for-model-organization)
+- [Managing Slowly Changing Dimensions with dbt fusion Snapshots](#managing-slowly-changing-dimensions-with-dbt-fusion-snapshots)
+- [Automating Testing and Deployment with dbt fusion CI/CD](#automating-testing-and-deployment-with-dbt-fusion-cicd)
+- [Deploying to dbt Cloud: Connecting the Git Repository and Creating Jobs](#deploying-to-dbt-cloud-connecting-the-git-repository-and-creating-jobs)
+- [Conclusion & Summary](#conclusion--summary)
+
 
 ## Project Structure
 
