@@ -2,11 +2,15 @@
 
 This project builds a data pipeline for real estate valuation using Snowflake, AWS S3, dbt Fusion 2.0.0-beta.13, GitHub Actions for CI/CD, and dbt Cloud for production deployment. Follow the steps below to set up the pipeline, matching the YouTube demo chapters.  
 
+---
+
 # Project Demonstration Videos
 
 [![dbt, AWS, Snowflake, & GitHub Actions](https://img.youtube.com/vi/rlnksiYvh_g/0.jpg)](https://youtu.be/rlnksiYvh_g)
 
 Click the image above to watch the full video for an in-depth overview of the data pipeline setup, including AWS S3 integration with Snowflake, dbt installation, Snowflake connection setup, and CI/CD automation with GitHub Actions. This video covers the entire process from data ingestion to deployment using dbt Cloud.
+
+---
 
 ## Prerequisites
 - Snowflake account with admin access
@@ -16,6 +20,8 @@ Click the image above to watch the full video for an in-depth overview of the da
 - GitHub repository access
 - dbt Cloud account
 - Windows PowerShell
+
+---
 
 ## Table of Contents
 - [Introduction](#introduction)
@@ -31,6 +37,7 @@ Click the image above to watch the full video for an in-depth overview of the da
 - [Deploying to dbt Cloud: Connecting the Git Repository and Creating Jobs](#deploying-to-dbt-cloud-connecting-the-git-repository-and-creating-jobs)
 - [Conclusion & Summary](#conclusion--summary)
 
+---
 
 ### Introduction
 
@@ -54,7 +61,7 @@ Key components include:
 
 This project follows best practices for scalable, maintainable data pipelines, enabling reliable and transparent real estate valuation analytics.
 
-
+---
 
 ## Project Structure
 
@@ -138,6 +145,7 @@ REAL_ESTATE_VALUATION_FUSION/
 └── raw_data_api.py
 ```
 
+---
 
 ## Step-by-Step Guide
 
@@ -255,6 +263,8 @@ I show how to create a Snowflake external stage connected to an AWS S3 bucket an
 
   This uses zero-copy cloning, saving storage costs. In dev, use a subset of data for testing.
 
+---
+
 ### DBT Fusion Installation and Snowflake Connection Setup
 This covers how to set up a dbt Fusion project, configure the Snowflake profile, and verify the connection by running a test model.
 
@@ -351,6 +361,7 @@ This covers how to set up a dbt Fusion project, configure the Snowflake profile,
   cd real_estate_valuation_fusion
 ```
 
+---
 ### Setting Up and Working with DBT Extension with VS Code  
 Use the dbt VS Code extension for development.
 
@@ -371,6 +382,7 @@ Use the dbt VS Code extension for development.
 - **Use Lineage and Query Results**
   Use the extension to view the lineage graph (shows dependencies like `raw_properties` > `stg_properties` > `int_property_values` > `dim_properties` > `snapshot_dim_property`) and preview query results for debugging.
 
+---
 ### Creating and Using Macros & Quarantine Tables in dbtf
 Organize the project with macros and quarantine tables.
 
@@ -397,6 +409,7 @@ Organize the project with macros and quarantine tables.
   dbtf deps
 ```
 
+---
 
 ### DBT Data Validation: Unit Tests vs Data Tests
 Add tests to validate data and logic.
@@ -406,6 +419,8 @@ Add tests to validate data and logic.
 
 - **Importance of Unit Tests**
   Unit tests, in the `unit_test` folder, verify transformation logic (e.g., sale year calculation) with mocked data. They ensure model accuracy before deployment.
+
+---
 
 ### Custom Schema Mapping for Model Organization
 Configure schema mappings for models.
@@ -417,6 +432,8 @@ Configure schema mappings for models.
   - `staging` or `base` to `STAGING`
   - `quarantine` to `QUARANTINE`
   This organizes data into logical Snowflake schemas.
+
+---
 
 ### Managing Slowly Changing Dimensions with dbt fusion Snapshots
 Create a snapshot to track changes.
@@ -468,6 +485,8 @@ Create a snapshot to track changes.
   - `dbt_scd_id`: Unique identifier for each snapshot record.
   These columns enable historical analysis of property data changes.
 
+---
+
 ### Automating Testing and Deployment with dbt fusion CI/CD
 Set up CI/CD with GitHub Actions.
 
@@ -516,7 +535,7 @@ Set up CI/CD with GitHub Actions.
   Save the ruleset.
 
 - **Demonstrate CI/CD**
-  Create a new model `models/analysis/fct_sales.sql`:
+  Create a new model `models/analysis/price_trends.sql`:
 
 ```sql
   SELECT
@@ -531,7 +550,7 @@ Set up CI/CD with GitHub Actions.
 
 ```sql
   git add .
-  git commit -m "Add fct_sales model"
+  git commit -m "price_trends"
   git push origin dev
 
 ```
@@ -539,12 +558,14 @@ Set up CI/CD with GitHub Actions.
   Create a feature branch and pull request:
 
 ```sql
-  git checkout -b feature/fct-sales
-  git push origin feature/fct-sales
+  git checkout -b feature/price_trends
+  git push origin feature/price_trends
 
 ```
 
   Create a pull request on GitHub, merge it after CI passes, and check prod deployment.
+
+---
 
 ### Deploying to dbt Cloud: Connecting the Git Repository and Creating Jobs
 Deploy the project to dbt Cloud.
@@ -573,12 +594,18 @@ Deploy the project to dbt Cloud.
 - **Run the Job**
   Trigger the job manually in dbt Cloud and check the run logs.
 
+---
+
 ### Conclusion & Summary
 A data pipeline with Snowflake, dbt Fusion, CI/CD, and dbt Cloud deployment. Watch the YouTube demo for a visual guide.
+
+---
 
 ## Project Lineage
 The lineage graph shows: 
 ![Lineage Graph](images/lineage_graph.png)
+
+---
 
 ## YouTube Demo
 [Watch the demo](YOUR_YOUTUBE_LINK) for a detailed walkthrough.
