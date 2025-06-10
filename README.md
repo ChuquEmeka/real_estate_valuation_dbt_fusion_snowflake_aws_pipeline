@@ -1,6 +1,12 @@
 # Real Estate Valuation Data Pipeline with dbt Fusion and Snowflake
 
-This project builds a data pipeline for real estate valuation using Snowflake, AWS S3, dbt Fusion 2.0.0-beta.13, GitHub Actions for CI/CD, and dbt Cloud for production deployment. Follow the steps below to set up the pipeline, matching the YouTube demo chapters.
+This project builds a data pipeline for real estate valuation using Snowflake, AWS S3, dbt Fusion 2.0.0-beta.13, GitHub Actions for CI/CD, and dbt Cloud for production deployment. Follow the steps below to set up the pipeline, matching the YouTube demo chapters.  
+
+# Project Demonstration Videos
+
+[![dbt, AWS, Snowflake, & GitHub Actions](https://img.youtube.com/vi/rlnksiYvh_g/0.jpg)](https://youtu.be/rlnksiYvh_g)
+
+Click the image above to watch the full video for an in-depth overview of the data pipeline setup, including AWS S3 integration with Snowflake, dbt installation, Snowflake connection setup, and CI/CD automation with GitHub Actions. This video covers the entire process from data ingestion to deployment using dbt Cloud.
 
 ## Prerequisites
 - Snowflake account with admin access
