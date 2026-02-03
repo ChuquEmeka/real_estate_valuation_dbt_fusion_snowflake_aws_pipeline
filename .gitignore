@@ -1,5 +1,42 @@
+# --------------------
+# dbt
+# --------------------
 dbt_packages/
 dbt_internal_packages/
 logs/
 target/
 .dbt/profiles.yml
+
+# --------------------
+# Python
+# --------------------
+venv/
+.env
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# --------------------
+# OS
+# --------------------
+.DS_Store
+Thumbs.db
+
+# --------------------
+# IDEs
+# --------------------
+.vscode/
+.idea/
+*.code-workspace
+
+# --------------------
+# Local / dev data
+# --------------------
+dev_data_*.json
+*.tmp
+
+
+.vscode/*
+!.vscode/launch.json
+!.vscode/tasks.json
