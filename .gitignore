@@ -35,3 +35,8 @@ Thumbs.db
 # --------------------
 dev_data_*.json
 *.tmp
+
+
+.vscode/*
+!.vscode/launch.json
+!.vscode/tasks.json
